@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "github.com/hatlonely/rpc-ops/api/gen/go/api";
+
+import "google/api/annotations.proto";
+
+message Empty {}
+
+message Article {
+  string id = 1;
+  string creatorID = 2;
+  string title = 3;
+  string content = 4;
+}
+
+message ArticleID {
+  string id = 1;
+}
+
+message ListArticleReq {
+  int32 offset = 1;
+  int32 limit = 2;
+}
+
+message ListArticleRes {
+  repeated Article articles = 1;
+}
+
+service ArticleService {
+  rpc Ping(Empty) returns (Empty) {
+    option (google.api.http) = {
+      get: "/ping"
+    };
+  }
+
+  rpc ListArticle(ListArticleReq) returns (ListArticleRes) {
+    option (google.api.http) = {
+      get: "/v1/repository"
+    };
+  }
+
+  rpc GetArticle(ArticleID) returns (Article) {
+    option (google.api.http) = {
+      get: "/v1/repository/{id}"
+    };
+  }
+
+  rpc DelArticle(ArticleID) returns (Empty) {
+    option (google.api.http) = {
+      delete: "/v1/repository/{id}"
+    };
+  }
+
+  rpc PutArticle(Article) returns (ArticleID) {
+    option (google.api.http) = {
+      post: "/v1/repository"
+      body: "*"
+    };
+  }
+
+  rpc UpdateArticle(Article) returns (Empty) {
+    option (google.api.http) = {
+      put: "/v1/repository/{id}"
+      body: "*"
+    };
+  }
+}
