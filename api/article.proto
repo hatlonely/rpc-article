@@ -37,32 +37,32 @@ service ArticleService {
 
   rpc ListArticle(ListArticleReq) returns (ListArticleRes) {
     option (google.api.http) = {
-      get: "/v1/repository"
+      get: "/v1/article"
     };
   }
 
   rpc GetArticle(ArticleID) returns (Article) {
     option (google.api.http) = {
-      get: "/v1/repository/{id}"
+      get: "/v1/article/{id}"
     };
   }
 
   rpc DelArticle(ArticleID) returns (Empty) {
     option (google.api.http) = {
-      delete: "/v1/repository/{id}"
+      delete: "/v1/article/{id}"
     };
   }
 
   rpc PutArticle(Article) returns (ArticleID) {
     option (google.api.http) = {
-      post: "/v1/repository"
+      post: "/v1/article"
       body: "*"
     };
   }
 
   rpc UpdateArticle(Article) returns (Empty) {
     option (google.api.http) = {
-      put: "/v1/repository/{id}"
+      put: "/v1/article/{id}"
       body: "*"
     };
   }
