@@ -12,7 +12,7 @@ type Author struct {
 
 type Article struct {
 	ID       string    `gorm:"type:char(32);primary_key" json:"id"`
-	AuthorID int       `gorm:"type:bigint(20);column:authorID;unique_index:author_title_idx;default:0" json:"authorID,omitempty"`
+	AuthorID string    `gorm:"type:char(32);column:authorID;unique_index:author_title_idx;default:0" json:"authorID,omitempty"`
 	Title    string    `gorm:"type:varchar(128);unique_index:author_title_idx;not null" json:"title,omitempty"`
 	Tags     string    `gorm:"type:varchar(256);default:''" json:"tags,omitempty"`
 	Brief    string    `gorm:"type:varchar(256);default:''" json:"brief,omitempty"`

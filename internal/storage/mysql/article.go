@@ -17,7 +17,7 @@ func (m *MySQL) PutArticle(ctx context.Context, article *storage.Article) (strin
 func (m *MySQL) GetArticle(ctx context.Context, id string) (*storage.Article, error) {
 	var article storage.Article
 	if err := m.db.
-		Where(ctx, "id=?", id).
+		Where(ctx, "`id`=?", id).
 		First(ctx, &article).
 		Unwrap().Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -30,7 +30,7 @@ func (m *MySQL) GetArticle(ctx context.Context, id string) (*storage.Article, er
 	return &article, nil
 }
 
-func (m *MySQL) GetArticleByAuthorAndTitle(ctx context.Context, authorID int, title string) (*storage.Article, error) {
+func (m *MySQL) GetArticleByAuthorAndTitle(ctx context.Context, authorID string, title string) (*storage.Article, error) {
 	var article storage.Article
 	if err := m.db.
 		Where(ctx, &storage.Article{AuthorID: authorID, Title: title}).
@@ -47,7 +47,7 @@ func (m *MySQL) GetArticleByAuthorAndTitle(ctx context.Context, authorID int, ti
 }
 
 func (m *MySQL) UpdateArticle(ctx context.Context, article *storage.Article) error {
-	return m.db.Model(ctx, article).Where(ctx, "id=?", article.ID).Updates(ctx, article).Unwrap().Error
+	return m.db.Model(ctx, article).Where(ctx, "`id`=?", article.ID).Updates(ctx, article).Unwrap().Error
 }
 
 func (m *MySQL) DelArticle(ctx context.Context, id string) error {
@@ -58,8 +58,8 @@ func (m *MySQL) ListArticles(ctx context.Context, offset int32, limit int32) ([]
 	var articles []*storage.Article
 
 	if err := m.db.
-		Select(ctx, "id, title, tags, author_id, ctime, utime, brief").
-		Order(ctx, "utime DESC").
+		//Select(ctx, "id, title, tags, author_id, ctime, utime, brief").
+		Order(ctx, "`createAt` DESC").
 		Offset(ctx, offset).
 		Limit(ctx, limit).
 		Find(ctx, &articles).
@@ -78,9 +78,9 @@ func (m *MySQL) ListArticlesByAuthor(ctx context.Context, authorID int, offset, 
 	var articles []*storage.Article
 
 	if err := m.db.
-		Select(ctx, "id, title, tags, author_id, ctime, utime, brief").
-		Where(ctx, "author_id=?", authorID).
-		Order(ctx, "utime DESC").
+		//Select(ctx, "id, title, tags, author_id, ctime, utime, brief").
+		Where(ctx, "`authorID`=?", authorID).
+		Order(ctx, "createAt DESC").
 		Offset(ctx, offset).
 		Limit(ctx, limit).
 		Find(ctx, &articles).
@@ -99,9 +99,9 @@ func (m *MySQL) ListArticlesByIDs(ctx context.Context, ids []string) ([]*storage
 	var articles []*storage.Article
 
 	if err := m.db.
-		Select(ctx, "id, title, tags, author_id, ctime, utime, brief").
-		Where(ctx, "id IN (?)", ids).
-		Order(ctx, "utime DESC").
+		//Select(ctx, "id, title, tags, author_id, ctime, utime, brief").
+		Where(ctx, "`id` IN (?)", ids).
+		Order(ctx, "createAt DESC").
 		Find(ctx, &articles).
 		Unwrap().Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
