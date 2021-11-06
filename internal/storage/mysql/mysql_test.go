@@ -41,9 +41,3 @@ func TestNewMySQLDB(t *testing.T) {
 		So(db, ShouldNotBeNil)
 	})
 }
-
-func TestMySQLDB_PutArticle(t *testing.T) {
-	Convey("TestMySQLDB_PutArticle", t, func() {
-
-	})
-}
