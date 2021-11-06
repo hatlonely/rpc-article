@@ -289,3 +289,47 @@ func TestMySQL_ListArticlesByAuthor(t *testing.T) {
 		})
 	})
 }
+
+func TestMySQL_ListArticlesByIDs(t *testing.T) {
+	Convey("TestMySQL_ListArticlesByIDs", t, func() {
+		db, err := NewTestMysql()
+		So(err, ShouldBeNil)
+
+		CleanTestMysql(db)
+
+		Convey("normal", func() {
+			var ids []string
+			for i := 0; i < 10; i++ {
+				id, err := db.PutArticle(context.Background(), &storage.Article{
+					AuthorID: fmt.Sprintf("testAuthorID%v", i),
+					Title:    fmt.Sprintf("testTitle%v", i),
+					Tags:     fmt.Sprintf("testTag%v", i),
+					Brief:    fmt.Sprintf("testBrief%v", i),
+					Content:  fmt.Sprintf("testContent%v", i),
+				})
+				So(err, ShouldBeNil)
+				ids = append(ids, id)
+			}
+
+			articles, err := db.ListArticlesByIDs(context.Background(), ids)
+			So(err, ShouldBeNil)
+			So(len(articles), ShouldEqual, 10)
+
+			sort.Slice(articles, func(i, j int) bool {
+				return articles[i].AuthorID < articles[j].AuthorID
+			})
+			for i := 0; i < 10; i++ {
+				So(articles[i], ShouldResemble, &storage.Article{
+					ID:       articles[i].ID,
+					AuthorID: fmt.Sprintf("testAuthorID%v", i),
+					Title:    fmt.Sprintf("testTitle%v", i),
+					Tags:     fmt.Sprintf("testTag%v", i),
+					Brief:    fmt.Sprintf("testBrief%v", i),
+					Content:  fmt.Sprintf("testContent%v", i),
+					CreateAt: articles[i].CreateAt,
+					UpdateAt: articles[i].UpdateAt,
+				})
+			}
+		})
+	})
+}
