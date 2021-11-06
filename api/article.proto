@@ -26,6 +26,7 @@ message ArticleID {
 message ListArticleReq {
   int32 offset = 1;
   int32 limit = 2;
+  string authorID = 3;
 }
 
 message ListArticleRes {

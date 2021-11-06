@@ -69,7 +69,17 @@ func (s *Service) UpdateArticle(ctx context.Context, req *api.Article) (*api.Emp
 }
 
 func (s *Service) ListArticle(ctx context.Context, req *api.ListArticleReq) (*api.ListArticleRes, error) {
-	articles, err := s.storage.ListArticles(ctx, req.Offset, req.Limit)
+	if req.Limit == 0 {
+		req.Limit = 100
+	}
+
+	var articles []*storage.Article
+	var err error
+	if len(req.AuthorID) == 0 {
+		articles, err = s.storage.ListArticles(ctx, req.Offset, req.Limit)
+	} else {
+		articles, err = s.storage.ListArticlesByAuthor(ctx, req.AuthorID, req.Offset, req.Limit)
+	}
 	if err != nil {
 		return nil, err
 	}

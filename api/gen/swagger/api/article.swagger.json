@@ -69,6 +69,12 @@
             "required": false,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "name": "authorID",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
