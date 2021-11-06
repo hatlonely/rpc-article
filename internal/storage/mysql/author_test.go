@@ -190,3 +190,27 @@ func TestMySQL_UpdateAuthorByKey(t *testing.T) {
 		})
 	})
 }
+
+func TestMySQL_DelAuthorByKey(t *testing.T) {
+	Convey("TestMySQL_DelAuthorByKey", t, func() {
+		db, err := NewTestMysql()
+		So(err, ShouldBeNil)
+
+		CleanTestMysql(db)
+
+		Convey("normal", func() {
+			id, err := db.PutAuthor(context.Background(), &storage.Author{
+				Key:  "testKey1",
+				Name: "testName1",
+			})
+			So(err, ShouldBeNil)
+
+			err = db.DelAuthorByKey(context.Background(), "testKey1")
+			So(err, ShouldBeNil)
+
+			author, err := db.GetAuthor(context.Background(), id)
+			So(err, ShouldBeNil)
+			So(author, ShouldBeNil)
+		})
+	})
+}
