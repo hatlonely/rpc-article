@@ -8,6 +8,10 @@ import (
 	"github.com/hatlonely/rpc-article/internal/storage"
 )
 
+func init() {
+	storage.RegisterStorage("MySQL", NewMySQLWithOptions)
+}
+
 func NewMySQLWithOptions(options *wrap.GORMDBWrapperOptions, opts ...refx.Option) (*MySQL, error) {
 	db, err := wrap.NewGORMDBWrapperWithOptions(options, opts...)
 
