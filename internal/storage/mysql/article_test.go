@@ -266,7 +266,7 @@ func TestMySQL_ListArticlesByAuthor(t *testing.T) {
 			So(len(articles), ShouldEqual, 10)
 
 			sort.Slice(articles, func(i, j int) bool {
-				return articles[i].AuthorID < articles[j].AuthorID
+				return articles[i].Title < articles[j].Title
 			})
 			for i := 0; i < 10; i++ {
 				So(articles[i], ShouldResemble, &storage.Article{

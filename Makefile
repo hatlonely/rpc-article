@@ -1,9 +1,10 @@
+NAME ?= rpc-article
 REGISTRY_NAMESPACE ?= hatlonely
 IMAGE_TAG ?= $(shell git describe --tags | awk '{print(substr($$0,2,length($$0)))}')
 
-binary=rpc-article
+binary=${NAME}
 namespace=${REGISTRY_NAMESPACE}
-repository=rpc-article
+repository=${NAME}
 version=${IMAGE_TAG}
 export GOPROXY=https://goproxy.cn
 
@@ -25,6 +26,9 @@ build: cmd/main.go $(wildcard internal/*/*.go) Makefile vendor
 
 clean:
 	rm -rf build
+
+test:
+	@go test -gcflags=all=-l -cover ./internal/...
 
 vendor: go.mod go.sum
 	go mod tidy
