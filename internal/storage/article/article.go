@@ -6,7 +6,8 @@ import (
 
 type Author struct {
 	ID   string `gorm:"type:char(32);primary_key" json:"id"`
-	Name string `gorm:"type:char(32);not null" json:"name"`
+	Key  string `gorm:"type:char(32);unique_index:key_index" json:"key,omitempty"`
+	Name string `gorm:"type:char(32);not null" json:"name,omitempty"`
 }
 
 type Article struct {
