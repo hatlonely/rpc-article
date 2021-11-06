@@ -9,12 +9,12 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func (m *MySQLDB) PutArticle(ctx context.Context, article *storage.Article) error {
+func (m *MySQL) PutArticle(ctx context.Context, article *storage.Article) error {
 	article.ID = hex.EncodeToString(uuid.NewV4().Bytes())
 	return m.db.Create(ctx, article).Unwrap().Error
 }
 
-func (m *MySQLDB) GetArticle(ctx context.Context, id string) (*storage.Article, error) {
+func (m *MySQL) GetArticle(ctx context.Context, id string) (*storage.Article, error) {
 	var article storage.Article
 	if err := m.db.
 		Where(ctx, "id=?", id).
@@ -30,7 +30,7 @@ func (m *MySQLDB) GetArticle(ctx context.Context, id string) (*storage.Article, 
 	return &article, nil
 }
 
-func (m *MySQLDB) GetArticleByAuthorAndTitle(ctx context.Context, authorID int, title string) (*storage.Article, error) {
+func (m *MySQL) GetArticleByAuthorAndTitle(ctx context.Context, authorID int, title string) (*storage.Article, error) {
 	var article storage.Article
 	if err := m.db.
 		Where(ctx, &storage.Article{AuthorID: authorID, Title: title}).
@@ -46,15 +46,15 @@ func (m *MySQLDB) GetArticleByAuthorAndTitle(ctx context.Context, authorID int, 
 	return &article, nil
 }
 
-func (m *MySQLDB) UpdateArticle(ctx context.Context, article *storage.Article) error {
+func (m *MySQL) UpdateArticle(ctx context.Context, article *storage.Article) error {
 	return m.db.Model(ctx, article).Where(ctx, "id=?", article.ID).Updates(ctx, article).Unwrap().Error
 }
 
-func (m *MySQLDB) DelArticle(ctx context.Context, id string) error {
+func (m *MySQL) DelArticle(ctx context.Context, id string) error {
 	return m.db.Delete(ctx, &storage.Article{ID: id}).Unwrap().Error
 }
 
-func (m *MySQLDB) ListArticles(ctx context.Context, offset int32, limit int32) ([]*storage.Article, error) {
+func (m *MySQL) ListArticles(ctx context.Context, offset int32, limit int32) ([]*storage.Article, error) {
 	var articles []*storage.Article
 
 	if err := m.db.
@@ -74,7 +74,7 @@ func (m *MySQLDB) ListArticles(ctx context.Context, offset int32, limit int32) (
 	return articles, nil
 }
 
-func (m *MySQLDB) ListArticlesByAuthor(ctx context.Context, authorID int, offset, limit int) ([]*storage.Article, error) {
+func (m *MySQL) ListArticlesByAuthor(ctx context.Context, authorID int, offset, limit int) ([]*storage.Article, error) {
 	var articles []*storage.Article
 
 	if err := m.db.
@@ -95,7 +95,7 @@ func (m *MySQLDB) ListArticlesByAuthor(ctx context.Context, authorID int, offset
 	return articles, nil
 }
 
-func (m *MySQLDB) ListArticlesByIDs(ctx context.Context, ids []string) ([]*storage.Article, error) {
+func (m *MySQL) ListArticlesByIDs(ctx context.Context, ids []string) ([]*storage.Article, error) {
 	var articles []*storage.Article
 
 	if err := m.db.

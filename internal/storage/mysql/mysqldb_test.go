@@ -11,7 +11,7 @@ import (
 
 func TestNewMySQLDB(t *testing.T) {
 	Convey("TestNewMySQLDB", t, func() {
-		db, err := NewMySQLDB(&wrap.GORMDBWrapperOptions{
+		db, err := NewMySQL(&wrap.GORMDBWrapperOptions{
 			Retry: micro.RetryOptions{
 				Attempts:      1,
 				LastErrorOnly: true,
