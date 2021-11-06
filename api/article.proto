@@ -10,9 +10,10 @@ message Empty {}
 
 message Article {
   string id = 1;
-  string creatorID = 2;
+  string authorID = 2;
   string title = 3;
-  string content = 4;
+  string tags = 4;
+  string content = 5;
 }
 
 message ArticleID {

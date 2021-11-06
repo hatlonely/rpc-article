@@ -193,10 +193,13 @@
             "schema": {
               "type": "object",
               "properties": {
-                "creatorID": {
+                "authorID": {
                   "type": "string"
                 },
                 "title": {
+                  "type": "string"
+                },
+                "tags": {
                   "type": "string"
                 },
                 "content": {
@@ -219,10 +222,13 @@
         "id": {
           "type": "string"
         },
-        "creatorID": {
+        "authorID": {
           "type": "string"
         },
         "title": {
+          "type": "string"
+        },
+        "tags": {
           "type": "string"
         },
         "content": {
