@@ -1,9 +1,11 @@
 NAME ?= rpc-article
+REGISTRY_ENDPOINT ?= registry.cn-shanghai.aliyuncs.com
 REGISTRY_NAMESPACE ?= hatlonely
 IMAGE_TAG ?= $(shell git describe --tags | awk '{print(substr($$0,2,length($$0)))}')
 
 binary=${NAME}
 namespace=${REGISTRY_NAMESPACE}
+registry=${REGISTRY_ENDPOINT}
 repository=${NAME}
 version=${IMAGE_TAG}
 export GOPROXY=https://goproxy.cn
@@ -39,7 +41,7 @@ codegen: api/article.proto submodule
 	if [ ! -z "$(shell docker ps --filter name=protobuf -q)" ]; then \
 		docker stop protobuf; \
 	fi
-	docker run --name protobuf -d --rm registry.cn-shanghai.aliyuncs.com/hatlonely/protobuf:1.0.0 tail -f /dev/null
+	docker run --name protobuf -d --rm ${registry}/hatlonely/protobuf:1.0.0 tail -f /dev/null
 	docker exec protobuf mkdir -p api
 	docker cp $< protobuf:/$<
 	docker cp rpc-api protobuf:/

@@ -31,6 +31,10 @@ env:
 
 
 task:
+  codegen:
+    step:
+      - docker login --username="${REGISTRY_USERNAME}" --password="${REGISTRY_PASSWORD}" "${REGISTRY_ENDPOINT}"
+      - make codegen
   image:
     step:
       - make image

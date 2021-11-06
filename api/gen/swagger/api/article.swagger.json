@@ -38,7 +38,7 @@
         ]
       }
     },
-    "/v1/repository": {
+    "/v1/article": {
       "get": {
         "operationId": "ArticleService_ListArticle",
         "responses": {
@@ -106,7 +106,7 @@
         ]
       }
     },
-    "/v1/repository/{id}": {
+    "/v1/article/{id}": {
       "get": {
         "operationId": "ArticleService_GetArticle",
         "responses": {
