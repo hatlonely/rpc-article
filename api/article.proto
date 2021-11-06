@@ -12,8 +12,11 @@ message Article {
   string id = 1;
   string authorID = 2;
   string title = 3;
-  string tags = 4;
-  string content = 5;
+  repeated string tags = 4;
+  string brief = 5;
+  string content = 6;
+  int32 createAt = 7;
+  int32 updateAt = 8;
 }
 
 message ArticleID {

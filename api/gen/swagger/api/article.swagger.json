@@ -200,10 +200,24 @@
                   "type": "string"
                 },
                 "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "brief": {
                   "type": "string"
                 },
                 "content": {
                   "type": "string"
+                },
+                "createAt": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "updateAt": {
+                  "type": "integer",
+                  "format": "int32"
                 }
               }
             }
@@ -229,10 +243,24 @@
           "type": "string"
         },
         "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "brief": {
           "type": "string"
         },
         "content": {
           "type": "string"
+        },
+        "createAt": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "updateAt": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
