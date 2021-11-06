@@ -9,9 +9,9 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func (m *MySQL) PutArticle(ctx context.Context, article *storage.Article) error {
+func (m *MySQL) PutArticle(ctx context.Context, article *storage.Article) (string, error) {
 	article.ID = hex.EncodeToString(uuid.NewV4().Bytes())
-	return m.db.Create(ctx, article).Unwrap().Error
+	return article.ID, m.db.Create(ctx, article).Unwrap().Error
 }
 
 func (m *MySQL) GetArticle(ctx context.Context, id string) (*storage.Article, error) {

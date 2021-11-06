@@ -10,15 +10,15 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestMySQLDB_PutAuthor(t *testing.T) {
-	Convey("TestMySQLDB_PutAuthor", t, func() {
+func TestMySQL_PutAuthor(t *testing.T) {
+	Convey("TestMySQL_PutAuthor", t, func() {
 		db, err := NewTestMysql()
 		So(err, ShouldBeNil)
 
 		CleanTestMysql(db)
 
 		Convey("normal", func() {
-			err := db.PutAuthor(context.Background(), &storage.Author{
+			_, err := db.PutAuthor(context.Background(), &storage.Author{
 				Key:  "testKey1",
 				Name: "testName1",
 			})
@@ -26,19 +26,50 @@ func TestMySQLDB_PutAuthor(t *testing.T) {
 		})
 
 		Convey("duplicate entry", func() {
-			err := db.PutAuthor(context.Background(), &storage.Author{
+			_, err := db.PutAuthor(context.Background(), &storage.Author{
 				Key:  "testKey1",
 				Name: "testName1",
 			})
 			So(err, ShouldBeNil)
 
-			err = db.PutAuthor(context.Background(), &storage.Author{
+			_, err = db.PutAuthor(context.Background(), &storage.Author{
 				Key:  "testKey1",
 				Name: "testName1",
 			})
 			So(err, ShouldNotBeNil)
 			So(err.(*mysql.MySQLError).Number, ShouldEqual, 1062)
 			So(err.(*mysql.MySQLError).Message, ShouldContainSubstring, "Duplicate entry")
+		})
+	})
+}
+
+func TestMySQL_GetAuthor(t *testing.T) {
+	Convey("TestMySQL_GetAuthor", t, func() {
+		db, err := NewTestMysql()
+		So(err, ShouldBeNil)
+
+		CleanTestMysql(db)
+
+		Convey("normal", func() {
+			id, err := db.PutAuthor(context.Background(), &storage.Author{
+				Key:  "testKey1",
+				Name: "testName1",
+			})
+			So(err, ShouldBeNil)
+
+			author, err := db.GetAuthor(context.Background(), id)
+			So(err, ShouldBeNil)
+			So(author, ShouldResemble, &storage.Author{
+				ID:   id,
+				Key:  "testKey1",
+				Name: "testName1",
+			})
+		})
+
+		Convey("not exist author", func() {
+			author, err := db.GetAuthor(context.Background(), "NotExistID")
+			So(err, ShouldBeNil)
+			So(author, ShouldBeNil)
 		})
 	})
 }
