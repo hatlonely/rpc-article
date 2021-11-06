@@ -131,3 +131,63 @@ func TestMySQL_UpdateArticle(t *testing.T) {
 		})
 	})
 }
+
+func TestMySQL_DelArticle(t *testing.T) {
+	Convey("TestMySQL_DelArticle", t, func() {
+		db, err := NewTestMysql()
+		So(err, ShouldBeNil)
+
+		CleanTestMysql(db)
+
+		Convey("normal", func() {
+			id, err := db.PutArticle(context.Background(), &storage.Article{
+				AuthorID: "testAuthorID1",
+				Title:    "testTitle1",
+				Tags:     "testTag1,testTag2",
+				Brief:    "testBrief1",
+				Content:  "testContent1",
+			})
+			So(err, ShouldBeNil)
+
+			err = db.DelArticle(context.Background(), id)
+			So(err, ShouldBeNil)
+
+			article, err := db.GetArticle(context.Background(), id)
+			So(err, ShouldBeNil)
+			So(article, ShouldBeNil)
+		})
+	})
+}
+
+func TestMySQL_GetArticleByAuthorAndTitle(t *testing.T) {
+	Convey("TestMySQL_GetArticleByAuthorAndTitle", t, func() {
+		db, err := NewTestMysql()
+		So(err, ShouldBeNil)
+
+		CleanTestMysql(db)
+
+		Convey("normal", func() {
+			id, err := db.PutArticle(context.Background(), &storage.Article{
+				AuthorID: "testAuthorID1",
+				Title:    "testTitle1",
+				Tags:     "testTag1,testTag2",
+				Brief:    "testBrief1",
+				Content:  "testContent1",
+			})
+			So(err, ShouldBeNil)
+
+			article, err := db.GetArticleByAuthorAndTitle(context.Background(), "testAuthorID1", "testTitle1")
+			So(err, ShouldBeNil)
+			So(article, ShouldResemble, &storage.Article{
+				ID:       id,
+				AuthorID: "testAuthorID1",
+				Title:    "testTitle1",
+				Tags:     "testTag1,testTag2",
+				Brief:    "testBrief1",
+				Content:  "testContent1",
+				CreateAt: article.CreateAt,
+				UpdateAt: article.UpdateAt,
+			})
+		})
+	})
+}
