@@ -73,3 +73,58 @@ func TestMySQL_GetAuthor(t *testing.T) {
 		})
 	})
 }
+
+func TestMySQL_UpdateAuthor(t *testing.T) {
+	Convey("TestMySQL_UpdateAuthor", t, func() {
+		db, err := NewTestMysql()
+		So(err, ShouldBeNil)
+
+		CleanTestMysql(db)
+
+		Convey("normal", func() {
+			id, err := db.PutAuthor(context.Background(), &storage.Author{
+				Key:  "testKey1",
+				Name: "testName1",
+			})
+			So(err, ShouldBeNil)
+
+			err = db.UpdateAuthor(context.Background(), &storage.Author{
+				ID:   id,
+				Name: "testName2",
+			})
+			So(err, ShouldBeNil)
+
+			author, err := db.GetAuthor(context.Background(), id)
+			So(err, ShouldBeNil)
+			So(author, ShouldResemble, &storage.Author{
+				ID:   id,
+				Key:  "testKey1",
+				Name: "testName2",
+			})
+		})
+	})
+}
+
+func TestMySQL_DelAuthor(t *testing.T) {
+	Convey("TestMySQL_DelAuthor", t, func() {
+		db, err := NewTestMysql()
+		So(err, ShouldBeNil)
+
+		CleanTestMysql(db)
+
+		Convey("normal", func() {
+			id, err := db.PutAuthor(context.Background(), &storage.Author{
+				Key:  "testKey1",
+				Name: "testName1",
+			})
+			So(err, ShouldBeNil)
+
+			err = db.DelAuthor(context.Background(), id)
+			So(err, ShouldBeNil)
+
+			author, err := db.GetAuthor(context.Background(), id)
+			So(err, ShouldBeNil)
+			So(author, ShouldBeNil)
+		})
+	})
+}
