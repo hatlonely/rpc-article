@@ -9,6 +9,12 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+var username = "hatlonely"
+var password = "keaiduo1"
+var database = "article"
+var host = "127.0.0.1"
+var port = 3306
+
 func TestNewMySQLDB(t *testing.T) {
 	Convey("TestNewMySQLDB", t, func() {
 		db, err := NewMySQL(&wrap.GORMDBWrapperOptions{
@@ -20,11 +26,11 @@ func TestNewMySQLDB(t *testing.T) {
 				Name: "articleDB",
 			},
 			Gorm: wrap.GormOptions{
-				Username:        "hatlonely",
-				Password:        "keaiduo1",
-				Database:        "article",
-				Host:            "127.0.0.1",
-				Port:            3306,
+				Username:        username,
+				Password:        password,
+				Database:        database,
+				Host:            host,
+				Port:            port,
 				ConnMaxLifeTime: 60 * time.Second,
 				MaxIdleConns:    10,
 				MaxOpenConns:    20,
