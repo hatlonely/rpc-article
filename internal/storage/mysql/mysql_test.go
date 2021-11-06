@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
@@ -71,4 +72,10 @@ func NewTestMysql() (*MySQL, error) {
 func CleanTestMysql(db *MySQL) {
 	db.db.Delete(context.Background(), &storage.Author{Key: "testKey1"})
 	db.db.Delete(context.Background(), &storage.Article{AuthorID: "testAuthorID1", Title: "testTitle1"})
+	for i := 0; i < 10; i++ {
+		db.db.Delete(context.Background(), &storage.Article{
+			AuthorID: fmt.Sprintf("testAuthorID%v", i),
+			Title:    fmt.Sprintf("testTitle%v", i),
+		})
+	}
 }

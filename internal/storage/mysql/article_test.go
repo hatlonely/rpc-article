@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/go-sql-driver/mysql"
@@ -188,6 +189,45 @@ func TestMySQL_GetArticleByAuthorAndTitle(t *testing.T) {
 				CreateAt: article.CreateAt,
 				UpdateAt: article.UpdateAt,
 			})
+		})
+	})
+}
+
+func TestMySQL_ListArticles(t *testing.T) {
+	Convey("TestMySQL_ListArticles", t, func() {
+		db, err := NewTestMysql()
+		So(err, ShouldBeNil)
+
+		CleanTestMysql(db)
+
+		for i := 0; i < 10; i++ {
+			_, err := db.PutArticle(context.Background(), &storage.Article{
+				AuthorID: fmt.Sprintf("testAuthorID%v", i),
+				Title:    fmt.Sprintf("testTitle%v", i),
+				Tags:     fmt.Sprintf("testTag%v", i),
+				Brief:    fmt.Sprintf("testBrief%v", i),
+				Content:  fmt.Sprintf("testContent%v", i),
+			})
+			So(err, ShouldBeNil)
+		}
+
+		Convey("normal", func() {
+			articles, err := db.ListArticles(context.Background(), 0, 10)
+			So(err, ShouldBeNil)
+			So(len(articles), ShouldEqual, 10)
+
+			for i := 0; i < 10; i++ {
+				So(articles[i], ShouldResemble, &storage.Article{
+					ID:       articles[i].ID,
+					AuthorID: fmt.Sprintf("testAuthorID%v", i),
+					Title:    fmt.Sprintf("testTitle%v", i),
+					Tags:     fmt.Sprintf("testTag%v", i),
+					Brief:    fmt.Sprintf("testBrief%v", i),
+					Content:  fmt.Sprintf("testContent%v", i),
+					CreateAt: articles[i].CreateAt,
+					UpdateAt: articles[i].UpdateAt,
+				})
+			}
 		})
 	})
 }
