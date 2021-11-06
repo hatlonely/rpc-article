@@ -8,7 +8,7 @@ import (
 	"github.com/hatlonely/rpc-article/internal/storage"
 )
 
-func NewMySQL(options *wrap.GORMDBWrapperOptions, opts ...refx.Option) (*MySQL, error) {
+func NewMySQLWithOptions(options *wrap.GORMDBWrapperOptions, opts ...refx.Option) (*MySQL, error) {
 	db, err := wrap.NewGORMDBWrapperWithOptions(options, opts...)
 
 	if err != nil {

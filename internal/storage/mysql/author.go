@@ -57,3 +57,7 @@ func (m *MySQL) GetAuthorByKey(ctx context.Context, key string) (*storage.Author
 func (m *MySQL) UpdateAuthorByKey(ctx context.Context, author *storage.Author) error {
 	return m.db.Model(ctx, author).Where(ctx, "key=?", author.Key).Updates(ctx, author).Unwrap().Error
 }
+
+func (m *MySQL) DelAuthorByKey(ctx context.Context, key string) error {
+	return m.db.Delete(ctx, &storage.Author{Key: key}).Unwrap().Error
+}
