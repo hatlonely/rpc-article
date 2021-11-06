@@ -5,10 +5,9 @@ import (
 	"strings"
 
 	"github.com/hatlonely/go-kit/rpcx"
-	"google.golang.org/grpc/codes"
-
 	"github.com/hatlonely/rpc-article/api/gen/go/api"
 	"github.com/hatlonely/rpc-article/internal/storage"
+	"google.golang.org/grpc/codes"
 )
 
 func (s *Service) PutArticle(ctx context.Context, req *api.Article) (*api.ArticleID, error) {
