@@ -3,6 +3,7 @@ package mysql
 import (
 	"context"
 	"fmt"
+	"sort"
 	"testing"
 
 	"github.com/go-sql-driver/mysql"
@@ -212,10 +213,13 @@ func TestMySQL_ListArticles(t *testing.T) {
 		}
 
 		Convey("normal", func() {
-			articles, err := db.ListArticles(context.Background(), 0, 10)
+			articles, err := db.ListArticles(context.Background(), 0, 100)
 			So(err, ShouldBeNil)
 			So(len(articles), ShouldEqual, 10)
 
+			sort.Slice(articles, func(i, j int) bool {
+				return articles[i].AuthorID < articles[j].AuthorID
+			})
 			for i := 0; i < 10; i++ {
 				So(articles[i], ShouldResemble, &storage.Article{
 					ID:       articles[i].ID,
@@ -228,6 +232,12 @@ func TestMySQL_ListArticles(t *testing.T) {
 					UpdateAt: articles[i].UpdateAt,
 				})
 			}
+		})
+
+		Convey("normal offset limit", func() {
+			articles, err := db.ListArticles(context.Background(), 3, 4)
+			So(err, ShouldBeNil)
+			So(len(articles), ShouldEqual, 4)
 		})
 	})
 }
