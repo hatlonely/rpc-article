@@ -241,3 +241,51 @@ func TestMySQL_ListArticles(t *testing.T) {
 		})
 	})
 }
+
+func TestMySQL_ListArticlesByAuthor(t *testing.T) {
+	Convey("TestMySQL_ListArticles", t, func() {
+		db, err := NewTestMysql()
+		So(err, ShouldBeNil)
+
+		CleanTestMysql(db)
+
+		for i := 0; i < 10; i++ {
+			_, err := db.PutArticle(context.Background(), &storage.Article{
+				AuthorID: "testAuthorID0",
+				Title:    fmt.Sprintf("testTitle%v", i),
+				Tags:     fmt.Sprintf("testTag%v", i),
+				Brief:    fmt.Sprintf("testBrief%v", i),
+				Content:  fmt.Sprintf("testContent%v", i),
+			})
+			So(err, ShouldBeNil)
+		}
+
+		Convey("normal", func() {
+			articles, err := db.ListArticlesByAuthor(context.Background(), "testAuthorID0", 0, 100)
+			So(err, ShouldBeNil)
+			So(len(articles), ShouldEqual, 10)
+
+			sort.Slice(articles, func(i, j int) bool {
+				return articles[i].AuthorID < articles[j].AuthorID
+			})
+			for i := 0; i < 10; i++ {
+				So(articles[i], ShouldResemble, &storage.Article{
+					ID:       articles[i].ID,
+					AuthorID: "testAuthorID0",
+					Title:    fmt.Sprintf("testTitle%v", i),
+					Tags:     fmt.Sprintf("testTag%v", i),
+					Brief:    fmt.Sprintf("testBrief%v", i),
+					Content:  fmt.Sprintf("testContent%v", i),
+					CreateAt: articles[i].CreateAt,
+					UpdateAt: articles[i].UpdateAt,
+				})
+			}
+		})
+
+		Convey("normal offset limit", func() {
+			articles, err := db.ListArticlesByAuthor(context.Background(), "testAuthorID0", 3, 4)
+			So(err, ShouldBeNil)
+			So(len(articles), ShouldEqual, 4)
+		})
+	})
+}

@@ -73,7 +73,7 @@ func (m *MySQL) ListArticles(ctx context.Context, offset int32, limit int32) ([]
 	return articles, nil
 }
 
-func (m *MySQL) ListArticlesByAuthor(ctx context.Context, authorID int, offset, limit int) ([]*storage.Article, error) {
+func (m *MySQL) ListArticlesByAuthor(ctx context.Context, authorID string, offset int32, limit int32) ([]*storage.Article, error) {
 	var articles []*storage.Article
 
 	if err := m.db.

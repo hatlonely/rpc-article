@@ -77,5 +77,10 @@ func CleanTestMysql(db *MySQL) {
 			AuthorID: fmt.Sprintf("testAuthorID%v", i),
 			Title:    fmt.Sprintf("testTitle%v", i),
 		})
+
+		db.db.Delete(context.Background(), &storage.Article{
+			AuthorID: "testAuthorID0",
+			Title:    fmt.Sprintf("testTitle%v", i),
+		})
 	}
 }
