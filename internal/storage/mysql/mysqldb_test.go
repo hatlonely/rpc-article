@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/hatlonely/go-kit/micro"
-
 	"github.com/hatlonely/go-kit/wrap"
 	. "github.com/smartystreets/goconvey/convey"
 )
