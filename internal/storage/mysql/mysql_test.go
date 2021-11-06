@@ -70,4 +70,5 @@ func NewTestMysql() (*MySQL, error) {
 
 func CleanTestMysql(db *MySQL) {
 	db.db.Delete(context.Background(), &storage.Author{Key: "testKey1"})
+	db.db.Delete(context.Background(), &storage.Article{AuthorID: "testAuthorID1", Title: "testTitle1"})
 }
