@@ -33,6 +33,16 @@ message ListArticleRes {
   repeated Article articles = 1;
 }
 
+message Author {
+  string id = 1;
+  string key = 2;
+  string name = 3;
+}
+
+message AuthorID {
+  string id = 1;
+}
+
 service ArticleService {
   rpc Ping(Empty) returns (Empty) {
     option (google.api.http) = {
@@ -40,9 +50,10 @@ service ArticleService {
     };
   }
 
-  rpc ListArticle(ListArticleReq) returns (ListArticleRes) {
+  rpc PutArticle(Article) returns (ArticleID) {
     option (google.api.http) = {
-      get: "/v1/article"
+      post: "/v1/article"
+      body: "*"
     };
   }
 
@@ -58,17 +69,16 @@ service ArticleService {
     };
   }
 
-  rpc PutArticle(Article) returns (ArticleID) {
-    option (google.api.http) = {
-      post: "/v1/article"
-      body: "*"
-    };
-  }
-
   rpc UpdateArticle(Article) returns (Empty) {
     option (google.api.http) = {
       put: "/v1/article/{id}"
       body: "*"
+    };
+  }
+
+  rpc ListArticle(ListArticleReq) returns (ListArticleRes) {
+    option (google.api.http) = {
+      get: "/v1/articles"
     };
   }
 }

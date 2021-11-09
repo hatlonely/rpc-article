@@ -39,48 +39,6 @@
       }
     },
     "/v1/article": {
-      "get": {
-        "operationId": "ArticleService_ListArticle",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiListArticleRes"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "authorID",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "ArticleService"
-        ]
-      },
       "post": {
         "operationId": "ArticleService_PutArticle",
         "responses": {
@@ -227,6 +185,50 @@
                 }
               }
             }
+          }
+        ],
+        "tags": [
+          "ArticleService"
+        ]
+      }
+    },
+    "/v1/articles": {
+      "get": {
+        "operationId": "ArticleService_ListArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListArticleRes"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "authorID",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
