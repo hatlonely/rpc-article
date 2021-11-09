@@ -50,6 +50,26 @@ service ArticleService {
     };
   }
 
+  rpc AddOrUpdateAuthor(Author) returns (AuthorID) {
+    option (google.api.http) = {
+      post: "/v1/addOrUpdateAuthor"
+      body: "*"
+    };
+  }
+
+  rpc DelAuthorByKey(Author) returns (Empty) {
+    option (google.api.http) = {
+      post: "/v1/delAuthorByKey"
+      body: "*"
+    };
+  }
+
+  rpc DelAuthor(AuthorID) returns (Empty) {
+    option (google.api.http) = {
+      delete: "/v1/author"
+    };
+  }
+
   rpc PutArticle(Article) returns (ArticleID) {
     option (google.api.http) = {
       post: "/v1/article"

@@ -38,6 +38,38 @@
         ]
       }
     },
+    "/v1/addOrUpdateAuthor": {
+      "post": {
+        "operationId": "ArticleService_AddOrUpdateAuthor",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiAuthorID"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiAuthor"
+            }
+          }
+        ],
+        "tags": [
+          "ArticleService"
+        ]
+      }
+    },
     "/v1/article": {
       "post": {
         "operationId": "ArticleService_PutArticle",
@@ -235,6 +267,68 @@
           "ArticleService"
         ]
       }
+    },
+    "/v1/author": {
+      "delete": {
+        "operationId": "ArticleService_DelAuthor",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiEmpty"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ArticleService"
+        ]
+      }
+    },
+    "/v1/delAuthorByKey": {
+      "post": {
+        "operationId": "ArticleService_DelAuthorByKey",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiEmpty"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiAuthor"
+            }
+          }
+        ],
+        "tags": [
+          "ArticleService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -273,6 +367,28 @@
       }
     },
     "apiArticleID": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "apiAuthor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "apiAuthorID": {
       "type": "object",
       "properties": {
         "id": {
