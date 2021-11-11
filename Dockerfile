@@ -2,7 +2,7 @@ FROM golang:1.16 AS build
 
 COPY . /go/src/
 WORKDIR /go/src/
-RUN make test
+#RUN make test
 RUN make build
 
 FROM centos:centos7
