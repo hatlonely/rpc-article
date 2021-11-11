@@ -14,9 +14,8 @@ func (s *Service) AddOrUpdateAuthor(ctx context.Context, req *api.Author) (*api.
 	}
 	if author == nil {
 		id, err := s.storage.PutAuthor(ctx, &storage.Author{
-			ID:   "",
-			Key:  "",
-			Name: "",
+			Key:  req.Key,
+			Name: req.Name,
 		})
 		if err != nil {
 			return nil, err
