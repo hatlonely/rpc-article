@@ -25,7 +25,13 @@ env:
     ELASTICSEARCH_ENDPOINT: "https://security-master:9200"
     ELASTICSEARCH_PASSWORD: "{{.elasticsearch.password}}"
     MONGO_ENDPOINT: "mongodb://mongo-mongodb:27017"
-    MONGO_PASSWORD: "{{.mongo.password}}"
+    MONGO_PASSWORD: "{{.mongo.rootPassword}}"
+    MYSQL_ROOT_PASSWORD: "{{.mysql.rootPassword}}"
+    MYSQL_HOST: "mysql"
+    MYSQL_PORT: 3306
+    MYSQL_USERNAME: "{{.mysql.username}}"
+    MYSQL_PASSWORD: "{{.mysql.password}}"
+    MYSQL_DATABASE: "article"
     JAEGER_SAMPLING_SERVER_URL: "http://jaeger-agent.monitoring:5778/sampling"
     JAEGER_REPORTER_LOCAL_AGENT_HOST_PORT: "jaeger-agent.monitoring:6831"
 
