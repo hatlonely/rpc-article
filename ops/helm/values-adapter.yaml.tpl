@@ -73,7 +73,7 @@ config:
               "retryIf": "GORM"
             },
             "wrapper": {
-              "name": "articleMySQL",
+              "name": "articleGorm",
               "enableTrace": false,
               "enableMetric": false
             },
