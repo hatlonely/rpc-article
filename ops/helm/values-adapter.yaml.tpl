@@ -70,7 +70,7 @@ config:
               "maxDelay": "3m",
               "lastErrorOnly": true,
               "delayType": "BackOff",
-              "retryIf": "mongo"
+              "retryIf": "GORM"
             },
             "wrapper": {
               "name": "mongo",
