@@ -34,8 +34,10 @@ type Options struct {
 }
 
 func main() {
+	opts := []refx.Option{refx.WithCamelName()}
+
 	var options Options
-	refx.Must(flag.Struct(&options, refx.WithCamelName()))
+	refx.Must(flag.Struct(&options, opts...))
 	refx.Must(flag.Parse(flag.WithJsonVal()))
 	if options.Help {
 		fmt.Println(flag.Usage())
@@ -50,29 +52,29 @@ func main() {
 		options.ConfigPath = "config/base.json"
 	}
 
-	cfg, err := config.NewConfigWithBaseFile(options.ConfigPath, refx.WithCamelName())
+	cfg, err := config.NewConfigWithBaseFile(options.ConfigPath, opts...)
 	refx.Must(err)
 	refx.Must(cfg.Watch())
 	defer cfg.Stop()
 
 	refx.Must(bind.Bind(&options, []bind.Getter{
-		flag.Instance(), bind.NewEnvGetter(bind.WithEnvPrefix("OPS")), cfg,
-	}, refx.WithCamelName()))
+		flag.Instance(), bind.NewEnvGetter(bind.WithEnvPrefix("RPC_ARTICLE")), cfg,
+	}, opts...))
 
-	grpcLog, err := logger.NewLoggerWithOptions(&options.Logger.Grpc, refx.WithCamelName())
+	grpcLog, err := logger.NewLoggerWithOptions(&options.Logger.Grpc, opts...)
 	refx.Must(err)
-	infoLog, err := logger.NewLoggerWithOptions(&options.Logger.Info, refx.WithCamelName())
+	infoLog, err := logger.NewLoggerWithOptions(&options.Logger.Info, opts...)
 	refx.Must(err)
-	execLog, err := logger.NewLoggerWithOptions(&options.Logger.Exec, refx.WithCamelName())
+	execLog, err := logger.NewLoggerWithOptions(&options.Logger.Exec, opts...)
 	refx.Must(err)
 	infoLog.With("options", options).Info("init config success")
 
 	_ = execLog
 
-	svc, err := service.NewServiceWithOptions(&options.Service)
+	svc, err := service.NewServiceWithOptions(&options.Service, opts...)
 	refx.Must(err)
 
-	grpcGateway, err := rpcx.NewGrpcGatewayWithOptions(&options.GrpcGateway)
+	grpcGateway, err := rpcx.NewGrpcGatewayWithOptions(&options.GrpcGateway, opts...)
 	refx.Must(err)
 	grpcGateway.SetLogger(infoLog, grpcLog)
 
