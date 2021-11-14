@@ -16,6 +16,7 @@ import (
 
 	"github.com/hatlonely/rpc-article/api/gen/go/api"
 	"github.com/hatlonely/rpc-article/internal/service"
+	_ "github.com/hatlonely/rpc-article/internal/storage/mysql"
 )
 
 var Version string
