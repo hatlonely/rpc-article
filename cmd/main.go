@@ -65,11 +65,7 @@ func main() {
 	refx.Must(err)
 	infoLog, err := logger.NewLoggerWithOptions(&options.Logger.Info, opts...)
 	refx.Must(err)
-	execLog, err := logger.NewLoggerWithOptions(&options.Logger.Exec, opts...)
-	refx.Must(err)
 	infoLog.With("options", options).Info("init config success")
-
-	_ = execLog
 
 	svc, err := service.NewServiceWithOptions(&options.Service, opts...)
 	refx.Must(err)
