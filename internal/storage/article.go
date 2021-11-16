@@ -9,6 +9,8 @@ import (
 	"github.com/pkg/errors"
 )
 
+var ErrNotFound = errors.New("not found")
+
 type Author struct {
 	ID   string `gorm:"type:char(32);primary_key" json:"id"`
 	Key  string `gorm:"type:char(32);unique_index:key_index" json:"key,omitempty"`

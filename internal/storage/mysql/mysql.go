@@ -18,31 +18,11 @@ func NewMySQLWithOptions(options *wrap.GORMDBWrapperOptions, opts ...refx.Option
 	if err != nil {
 		return nil, err
 	}
-
-	if !db.HasTable(&storage.Article{}) {
-		if err := db.
-			Set(context.Background(), "gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4").
-			CreateTable(context.Background(), &storage.Article{}).
-			Unwrap().Error; err != nil {
-			return nil, err
-		}
-	} else {
-		if err := db.AutoMigrate(context.Background(), &storage.Article{}).Unwrap().Error; err != nil {
-			return nil, err
-		}
+	if err := db.AutoMigrate(context.Background(), &storage.Article{}); err != nil {
+		return nil, err
 	}
-
-	if !db.HasTable(&storage.Author{}) {
-		if err := db.
-			Set(context.Background(), "gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4").
-			CreateTable(context.Background(), &storage.Author{}).
-			Unwrap().Error; err != nil {
-			return nil, err
-		}
-	} else {
-		if err := db.AutoMigrate(context.Background(), &storage.Author{}).Unwrap().Error; err != nil {
-			return nil, err
-		}
+	if err := db.AutoMigrate(context.Background(), &storage.Author{}); err != nil {
+		return nil, err
 	}
 
 	return &MySQL{

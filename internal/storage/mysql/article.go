@@ -5,13 +5,16 @@ import (
 	"encoding/hex"
 
 	"github.com/hatlonely/rpc-article/internal/storage"
-	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func (m *MySQL) PutArticle(ctx context.Context, article *storage.Article) (string, error) {
 	article.ID = hex.EncodeToString(uuid.NewV4().Bytes())
-	return article.ID, m.db.Create(ctx, article).Unwrap().Error
+	return article.ID, m.db.Clauses(ctx, clause.OnConflict{
+		UpdateAll: true,
+	}).Create(ctx, article).Unwrap().Error
 }
 
 func (m *MySQL) GetArticle(ctx context.Context, id string) (*storage.Article, error) {
@@ -21,7 +24,7 @@ func (m *MySQL) GetArticle(ctx context.Context, id string) (*storage.Article, er
 		First(ctx, &article).
 		Unwrap().Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, nil
+			return nil, storage.ErrNotFound
 		}
 
 		return nil, err
@@ -37,7 +40,7 @@ func (m *MySQL) GetArticleByAuthorAndTitle(ctx context.Context, authorID string,
 		Find(ctx, &article).
 		Unwrap().Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, nil
+			return nil, storage.ErrNotFound
 		}
 
 		return nil, err
@@ -59,8 +62,8 @@ func (m *MySQL) ListArticles(ctx context.Context, offset int32, limit int32) ([]
 
 	if err := m.db.
 		Order(ctx, "`createAt` DESC, `authorID`, `title`").
-		Offset(ctx, offset).
-		Limit(ctx, limit).
+		Offset(ctx, int(offset)).
+		Limit(ctx, int(limit)).
 		Find(ctx, &articles).
 		Unwrap().Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -79,8 +82,8 @@ func (m *MySQL) ListArticlesByAuthor(ctx context.Context, authorID string, offse
 	if err := m.db.
 		Where(ctx, "`authorID`=?", authorID).
 		Order(ctx, "`createAt` DESC, `authorID`, `title`").
-		Offset(ctx, offset).
-		Limit(ctx, limit).
+		Offset(ctx, int(offset)).
+		Limit(ctx, int(limit)).
 		Find(ctx, &articles).
 		Unwrap().Error; err != nil {
 		if err == gorm.ErrRecordNotFound {

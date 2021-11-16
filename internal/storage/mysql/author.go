@@ -21,7 +21,7 @@ func (m *MySQL) GetAuthor(ctx context.Context, id string) (*storage.Author, erro
 		First(ctx, &author).
 		Unwrap().Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, nil
+			return nil, storage.ErrNotFound
 		}
 
 		return nil, err
@@ -45,7 +45,7 @@ func (m *MySQL) GetAuthorByKey(ctx context.Context, key string) (*storage.Author
 		First(ctx, &author).
 		Unwrap().Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, nil
+			return nil, storage.ErrNotFound
 		}
 
 		return nil, err

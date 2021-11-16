@@ -329,6 +329,38 @@
           "ArticleService"
         ]
       }
+    },
+    "/v1/putOrUpdateArticle": {
+      "post": {
+        "operationId": "ArticleService_PutOrUpdateArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiArticleID"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiArticle"
+            }
+          }
+        ],
+        "tags": [
+          "ArticleService"
+        ]
+      }
     }
   },
   "definitions": {
