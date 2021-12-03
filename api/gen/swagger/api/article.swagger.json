@@ -457,9 +457,6 @@
         "authorID": {
           "type": "string"
         },
-        "authorName": {
-          "type": "string"
-        },
         "title": {
           "type": "string"
         },
@@ -479,6 +476,12 @@
         "updateAt": {
           "type": "integer",
           "format": "int32"
+        },
+        "authorName": {
+          "type": "string"
+        },
+        "authorAvatar": {
+          "type": "string"
         }
       }
     },
@@ -492,6 +495,9 @@
           "type": "string"
         },
         "name": {
+          "type": "string"
+        },
+        "avatar": {
           "type": "string"
         }
       }

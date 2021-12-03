@@ -18,8 +18,9 @@ type ArticleJoinAuthor struct {
 	CreateAt time.Time `gorm:"type:timestamp;column:createAt;not null;default:CURRENT_TIMESTAMP;index:create_at_idx" json:"createAt,omitempty"`
 	UpdateAt time.Time `gorm:"type:timestamp;column:updateAt;not null;default:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;index:update_at_idx" json:"updateAt,omitempty"`
 
-	Key  string `gorm:"type:char(32);unique_index:key_index" json:"key,omitempty"`
-	Name string `gorm:"type:char(32);not null" json:"name,omitempty"`
+	Key    string `gorm:"type:char(32);unique_index:key_index" json:"key,omitempty"`
+	Name   string `gorm:"type:char(32);not null" json:"name,omitempty"`
+	Avatar string `gorm:"type:varchar(255)" json:"avatar,omitempty"`
 }
 
 func (m *MySQL) ListArticleJoinAuthor(ctx context.Context, authorID string, offset int32, limit int32) ([]*storage.ArticleJoinAuthor, error) {
@@ -55,9 +56,10 @@ func (m *MySQL) ListArticleJoinAuthor(ctx context.Context, authorID string, offs
 				UpdateAt: time.Time{},
 			},
 			Author: &storage.Author{
-				ID:   articleJoinAuthor.AuthorID,
-				Key:  articleJoinAuthor.Key,
-				Name: articleJoinAuthor.Name,
+				ID:     articleJoinAuthor.AuthorID,
+				Key:    articleJoinAuthor.Key,
+				Name:   articleJoinAuthor.Name,
+				Avatar: articleJoinAuthor.Avatar,
 			},
 		})
 	}

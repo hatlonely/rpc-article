@@ -9,8 +9,9 @@ import (
 
 func (s *Service) PutAuthor(ctx context.Context, req *api.Author) (*api.AuthorID, error) {
 	id, err := s.storage.PutAuthor(ctx, &storage.Author{
-		Key:  req.Key,
-		Name: req.Name,
+		Key:    req.Key,
+		Name:   req.Name,
+		Avatar: req.Avatar,
 	})
 	if err != nil {
 		return nil, err

@@ -37,6 +37,7 @@ message Author {
   string id = 1;
   string key = 2;
   string name = 3;
+  string avatar = 4;
 }
 
 message AuthorID {
@@ -52,12 +53,13 @@ message ListArticleMetaReq {
 message ArticleMeta {
   string id = 1;
   string authorID = 2;
-  string authorName = 3;
-  string title = 4;
-  repeated string tags = 5;
-  string brief = 6;
-  int32 createAt = 7;
-  int32 updateAt = 8;
+  string title = 3;
+  repeated string tags = 4;
+  string brief = 5;
+  int32 createAt = 6;
+  int32 updateAt = 7;
+  string authorName = 8;
+  string authorAvatar = 9;
 }
 
 message ListArticleMetaRes {

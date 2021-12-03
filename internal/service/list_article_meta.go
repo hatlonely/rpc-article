@@ -26,14 +26,15 @@ func (s *Service) ListArticleMeta(ctx context.Context, req *api.ListArticleMetaR
 	var res api.ListArticleMetaRes
 	for _, articleJoinAuthor := range articleJoinAuthors {
 		res.ArticleMetas = append(res.ArticleMetas, &api.ArticleMeta{
-			Id:         articleJoinAuthor.Article.ID,
-			AuthorID:   articleJoinAuthor.Article.AuthorID,
-			Title:      articleJoinAuthor.Article.Title,
-			Tags:       strings.Split(articleJoinAuthor.Article.Tags, "|"),
-			Brief:      articleJoinAuthor.Article.Brief,
-			CreateAt:   int32(articleJoinAuthor.Article.CreateAt.Unix()),
-			UpdateAt:   int32(articleJoinAuthor.Article.UpdateAt.Unix()),
-			AuthorName: articleJoinAuthor.Author.Name,
+			Id:           articleJoinAuthor.Article.ID,
+			AuthorID:     articleJoinAuthor.Article.AuthorID,
+			Title:        articleJoinAuthor.Article.Title,
+			Tags:         strings.Split(articleJoinAuthor.Article.Tags, "|"),
+			Brief:        articleJoinAuthor.Article.Brief,
+			CreateAt:     int32(articleJoinAuthor.Article.CreateAt.Unix()),
+			UpdateAt:     int32(articleJoinAuthor.Article.UpdateAt.Unix()),
+			AuthorName:   articleJoinAuthor.Author.Name,
+			AuthorAvatar: articleJoinAuthor.Author.Avatar,
 		})
 	}
 

@@ -12,9 +12,10 @@ import (
 var ErrNotFound = errors.New("not found")
 
 type Author struct {
-	ID   string `gorm:"type:char(32);primary_key" json:"id"`
-	Key  string `gorm:"type:char(32);unique_index:key_index" json:"key,omitempty"`
-	Name string `gorm:"type:char(32);not null" json:"name,omitempty"`
+	ID     string `gorm:"type:char(32);primary_key" json:"id"`
+	Key    string `gorm:"type:char(32);unique_index:key_index" json:"key,omitempty"`
+	Name   string `gorm:"type:char(32);not null" json:"name,omitempty"`
+	Avatar string `gorm:"type:varchar(255)" json:"avatar,omitempty"`
 }
 
 type Article struct {
