@@ -7,11 +7,14 @@ import (
 	"github.com/hatlonely/rpc-article/internal/storage"
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
+	"gorm.io/gorm/clause"
 )
 
 func (m *MySQL) PutAuthor(ctx context.Context, author *storage.Author) (string, error) {
 	author.ID = hex.EncodeToString(uuid.NewV4().Bytes())
-	return author.ID, m.db.Create(ctx, author).Unwrap().Error
+	return author.ID, m.db.Clauses(ctx, clause.OnConflict{
+		UpdateAll: true,
+	}).Create(ctx, author).Unwrap().Error
 }
 
 func (m *MySQL) GetAuthor(ctx context.Context, id string) (*storage.Author, error) {

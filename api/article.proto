@@ -64,12 +64,12 @@ service ArticleService {
     };
   }
 
-//  rpc PutOrUpdateArticle(Article) returns (ArticleID) {
-//    option (google.api.http) = {
-//      post: "/v1/putOrUpdateArticle"
-//      body: "*"
-//    };
-//  }
+  rpc PutAuthor(Author) returns (AuthorID) {
+    option (google.api.http) = {
+      post: "/v1/author"
+      body: "*"
+    };
+  }
 
   rpc DelAuthor(AuthorID) returns (Empty) {
     option (google.api.http) = {

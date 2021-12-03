@@ -25,7 +25,7 @@ type ArticleServiceClient interface {
 	Ping(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
 	AddOrUpdateAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*AuthorID, error)
 	DelAuthorByKey(ctx context.Context, in *Author, opts ...grpc.CallOption) (*Empty, error)
-	PutOrUpdateArticle(ctx context.Context, in *Article, opts ...grpc.CallOption) (*ArticleID, error)
+	PutAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*AuthorID, error)
 	DelAuthor(ctx context.Context, in *AuthorID, opts ...grpc.CallOption) (*Empty, error)
 	PutArticle(ctx context.Context, in *Article, opts ...grpc.CallOption) (*ArticleID, error)
 	GetArticle(ctx context.Context, in *ArticleID, opts ...grpc.CallOption) (*Article, error)
@@ -69,9 +69,9 @@ func (c *articleServiceClient) DelAuthorByKey(ctx context.Context, in *Author, o
 	return out, nil
 }
 
-func (c *articleServiceClient) PutOrUpdateArticle(ctx context.Context, in *Article, opts ...grpc.CallOption) (*ArticleID, error) {
-	out := new(ArticleID)
-	err := c.cc.Invoke(ctx, "/api.ArticleService/PutOrUpdateArticle", in, out, opts...)
+func (c *articleServiceClient) PutAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*AuthorID, error) {
+	out := new(AuthorID)
+	err := c.cc.Invoke(ctx, "/api.ArticleService/PutAuthor", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +139,7 @@ type ArticleServiceServer interface {
 	Ping(context.Context, *Empty) (*Empty, error)
 	AddOrUpdateAuthor(context.Context, *Author) (*AuthorID, error)
 	DelAuthorByKey(context.Context, *Author) (*Empty, error)
-	PutOrUpdateArticle(context.Context, *Article) (*ArticleID, error)
+	PutAuthor(context.Context, *Author) (*AuthorID, error)
 	DelAuthor(context.Context, *AuthorID) (*Empty, error)
 	PutArticle(context.Context, *Article) (*ArticleID, error)
 	GetArticle(context.Context, *ArticleID) (*Article, error)
@@ -162,8 +162,8 @@ func (UnimplementedArticleServiceServer) AddOrUpdateAuthor(context.Context, *Aut
 func (UnimplementedArticleServiceServer) DelAuthorByKey(context.Context, *Author) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelAuthorByKey not implemented")
 }
-func (UnimplementedArticleServiceServer) PutOrUpdateArticle(context.Context, *Article) (*ArticleID, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PutOrUpdateArticle not implemented")
+func (UnimplementedArticleServiceServer) PutAuthor(context.Context, *Author) (*AuthorID, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PutAuthor not implemented")
 }
 func (UnimplementedArticleServiceServer) DelAuthor(context.Context, *AuthorID) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelAuthor not implemented")
@@ -250,20 +250,20 @@ func _ArticleService_DelAuthorByKey_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ArticleService_PutOrUpdateArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Article)
+func _ArticleService_PutAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Author)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArticleServiceServer).PutOrUpdateArticle(ctx, in)
+		return srv.(ArticleServiceServer).PutAuthor(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.ArticleService/PutOrUpdateArticle",
+		FullMethod: "/api.ArticleService/PutAuthor",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArticleServiceServer).PutOrUpdateArticle(ctx, req.(*Article))
+		return srv.(ArticleServiceServer).PutAuthor(ctx, req.(*Author))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -396,8 +396,8 @@ var ArticleService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ArticleService_DelAuthorByKey_Handler,
 		},
 		{
-			MethodName: "PutOrUpdateArticle",
-			Handler:    _ArticleService_PutOrUpdateArticle_Handler,
+			MethodName: "PutAuthor",
+			Handler:    _ArticleService_PutAuthor_Handler,
 		},
 		{
 			MethodName: "DelAuthor",
