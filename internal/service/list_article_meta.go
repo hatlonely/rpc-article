@@ -15,30 +15,25 @@ func (s *Service) ListArticleMeta(ctx context.Context, req *api.ListArticleMetaR
 		req.Limit = 100
 	}
 
-	var articles []*storage.Article
-	var err error
-	if len(req.AuthorID) == 0 {
-		articles, err = s.storage.ListArticles(ctx, req.Offset, req.Limit)
-	} else {
-		articles, err = s.storage.ListArticlesByAuthor(ctx, req.AuthorID, req.Offset, req.Limit)
-	}
+	articleJoinAuthors, err := s.storage.ListArticleJoinAuthor(ctx, req.AuthorID, req.Offset, req.Limit)
 	if err != nil {
+		if err == storage.ErrNotFound {
+			return nil, rpcx.NewErrorf(nil, codes.NotFound, "ArticleNotExists", "article not exist")
+		}
 		return nil, err
-	}
-	if articles == nil {
-		return nil, rpcx.NewErrorf(nil, codes.NotFound, "ArticleNotExists", "article not exist")
 	}
 
 	var res api.ListArticleMetaRes
-	for _, article := range articles {
+	for _, articleJoinAuthor := range articleJoinAuthors {
 		res.ArticleMetas = append(res.ArticleMetas, &api.ArticleMeta{
-			Id:       article.ID,
-			AuthorID: article.AuthorID,
-			Title:    article.Title,
-			Tags:     strings.Split(article.Tags, "|"),
-			Brief:    article.Brief,
-			CreateAt: int32(article.CreateAt.Unix()),
-			UpdateAt: int32(article.UpdateAt.Unix()),
+			Id:         articleJoinAuthor.Article.ID,
+			AuthorID:   articleJoinAuthor.Article.AuthorID,
+			Title:      articleJoinAuthor.Article.Title,
+			Tags:       strings.Split(articleJoinAuthor.Article.Tags, "|"),
+			Brief:      articleJoinAuthor.Article.Brief,
+			CreateAt:   int32(articleJoinAuthor.Article.CreateAt.Unix()),
+			UpdateAt:   int32(articleJoinAuthor.Article.UpdateAt.Unix()),
+			AuthorName: articleJoinAuthor.Author.Name,
 		})
 	}
 

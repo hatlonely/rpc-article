@@ -28,6 +28,11 @@ type Article struct {
 	UpdateAt time.Time `gorm:"type:timestamp;column:updateAt;not null;default:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;index:update_at_idx" json:"updateAt,omitempty"`
 }
 
+type ArticleJoinAuthor struct {
+	Author  *Author
+	Article *Article
+}
+
 type Storage interface {
 	PutArticle(ctx context.Context, article *Article) (string, error)
 	GetArticle(ctx context.Context, id string) (*Article, error)
@@ -45,6 +50,8 @@ type Storage interface {
 	GetAuthorByKey(ctx context.Context, key string) (*Author, error)
 	UpdateAuthorByKey(ctx context.Context, author *Author) error
 	DelAuthorByKey(ctx context.Context, key string) error
+
+	ListArticleJoinAuthor(ctx context.Context, authorID string, offset int32, limit int32) ([]*ArticleJoinAuthor, error)
 }
 
 func RegisterStorage(key string, constructor interface{}) {
