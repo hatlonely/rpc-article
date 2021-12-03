@@ -26,10 +26,11 @@ type ArticleJoinAuthor struct {
 func (m *MySQL) ListArticleJoinAuthor(ctx context.Context, authorID string, offset int32, limit int32) ([]*storage.ArticleJoinAuthor, error) {
 	var articleJoinAuthors []*ArticleJoinAuthor
 
-	db := m.db.Model(ctx, &storage.Author{}).Joins(ctx, "left join authors on articles.authorID = authors.id")
+	db := m.db.Model(ctx, &storage.Article{}).Joins(ctx, "left join `authors` on `articles`.`authorID` = `authors`.`id`")
 	if authorID != "" {
 		db = db.Where(ctx, "`authorID`=?", authorID)
 	}
+	db = db.Select(ctx, "`articles`.`id`, `authorID`, `title`, `tags`, `brief`, `content`, `createAt`, `updateAt`, `key`, `name`, `avatar`")
 	if err := db.
 		Order(ctx, "`createAt` DESC, `authorID`, `title`").
 		Offset(ctx, int(offset)).
