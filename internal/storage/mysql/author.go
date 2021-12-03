@@ -5,8 +5,8 @@ import (
 	"encoding/hex"
 
 	"github.com/hatlonely/rpc-article/internal/storage"
-	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -62,5 +62,5 @@ func (m *MySQL) UpdateAuthorByKey(ctx context.Context, author *storage.Author) e
 }
 
 func (m *MySQL) DelAuthorByKey(ctx context.Context, key string) error {
-	return m.db.Delete(ctx, &storage.Author{Key: key}).Unwrap().Error
+	return m.db.Delete(ctx, &storage.Author{}, &storage.Author{Key: key}).Unwrap().Error
 }

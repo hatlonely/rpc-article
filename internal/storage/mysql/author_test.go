@@ -6,7 +6,6 @@ import (
 
 	"github.com/hatlonely/rpc-article/internal/storage"
 
-	"github.com/go-sql-driver/mysql"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -36,9 +35,7 @@ func TestMySQL_PutAuthor(t *testing.T) {
 				Key:  "testKey1",
 				Name: "testName1",
 			})
-			So(err, ShouldNotBeNil)
-			So(err.(*mysql.MySQLError).Number, ShouldEqual, 1062)
-			So(err.(*mysql.MySQLError).Message, ShouldContainSubstring, "Duplicate entry")
+			So(err, ShouldBeNil)
 		})
 	})
 }
@@ -67,9 +64,8 @@ func TestMySQL_GetAuthor(t *testing.T) {
 		})
 
 		Convey("not exist author", func() {
-			author, err := db.GetAuthor(context.Background(), "NotExistID")
-			So(err, ShouldBeNil)
-			So(author, ShouldBeNil)
+			_, err := db.GetAuthor(context.Background(), "NotExistID")
+			So(err, ShouldEqual, storage.ErrNotFound)
 		})
 	})
 }
@@ -122,9 +118,8 @@ func TestMySQL_DelAuthor(t *testing.T) {
 			err = db.DelAuthor(context.Background(), id)
 			So(err, ShouldBeNil)
 
-			author, err := db.GetAuthor(context.Background(), id)
-			So(err, ShouldBeNil)
-			So(author, ShouldBeNil)
+			_, err = db.GetAuthor(context.Background(), id)
+			So(err, ShouldEqual, storage.ErrNotFound)
 		})
 	})
 }
@@ -153,9 +148,8 @@ func TestMySQL_GetAuthorByKey(t *testing.T) {
 		})
 
 		Convey("not exist author", func() {
-			author, err := db.GetAuthorByKey(context.Background(), "NotExistKey")
-			So(err, ShouldBeNil)
-			So(author, ShouldBeNil)
+			_, err := db.GetAuthorByKey(context.Background(), "NotExistKey")
+			So(err, ShouldEqual, storage.ErrNotFound)
 		})
 	})
 }
@@ -208,9 +202,8 @@ func TestMySQL_DelAuthorByKey(t *testing.T) {
 			err = db.DelAuthorByKey(context.Background(), "testKey1")
 			So(err, ShouldBeNil)
 
-			author, err := db.GetAuthor(context.Background(), id)
-			So(err, ShouldBeNil)
-			So(author, ShouldBeNil)
+			_, err = db.GetAuthor(context.Background(), id)
+			So(err, ShouldEqual, storage.ErrNotFound)
 		})
 	})
 }

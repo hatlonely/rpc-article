@@ -6,7 +6,6 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/go-sql-driver/mysql"
 	"github.com/hatlonely/rpc-article/internal/storage"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -46,9 +45,7 @@ func TestMySQL_PutArticle(t *testing.T) {
 				Brief:    "testBrief1",
 				Content:  "testContent1",
 			})
-			So(err, ShouldNotBeNil)
-			So(err.(*mysql.MySQLError).Number, ShouldEqual, 1062)
-			So(err.(*mysql.MySQLError).Message, ShouldContainSubstring, "Duplicate entry")
+			So(err, ShouldBeNil)
 		})
 	})
 }
@@ -85,9 +82,8 @@ func TestMySQL_GetArticle(t *testing.T) {
 		})
 
 		Convey("not exist article", func() {
-			article, err := db.GetArticle(context.Background(), "NotExistID")
-			So(err, ShouldBeNil)
-			So(article, ShouldBeNil)
+			_, err := db.GetArticle(context.Background(), "NotExistID")
+			So(err, ShouldEqual, storage.ErrNotFound)
 		})
 	})
 }
@@ -154,9 +150,8 @@ func TestMySQL_DelArticle(t *testing.T) {
 			err = db.DelArticle(context.Background(), id)
 			So(err, ShouldBeNil)
 
-			article, err := db.GetArticle(context.Background(), id)
-			So(err, ShouldBeNil)
-			So(article, ShouldBeNil)
+			_, err = db.GetArticle(context.Background(), id)
+			So(err, ShouldEqual, storage.ErrNotFound)
 		})
 	})
 }

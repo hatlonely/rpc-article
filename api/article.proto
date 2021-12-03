@@ -43,6 +43,27 @@ message AuthorID {
   string id = 1;
 }
 
+message ListArticleMetaReq {
+  int32 offset = 1;
+  int32 limit = 2;
+  string authorID = 3;
+}
+
+message ArticleMeta {
+  string id = 1;
+  string authorID = 2;
+  string authorName = 3;
+  string title = 4;
+  repeated string tags = 5;
+  string brief = 6;
+  int32 createAt = 7;
+  int32 updateAt = 8;
+}
+
+message ListArticleMetaRes {
+  repeated ArticleMeta articleMetas = 1;
+}
+
 service ArticleService {
   rpc Ping(Empty) returns (Empty) {
     option (google.api.http) = {
@@ -61,6 +82,12 @@ service ArticleService {
     option (google.api.http) = {
       post: "/v1/delAuthorByKey"
       body: "*"
+    };
+  }
+
+  rpc ListArticleMeta(ListArticleMetaReq) returns (ListArticleMetaRes) {
+    option (google.api.http) = {
+      get: "/v1/listArticleMeta"
     };
   }
 

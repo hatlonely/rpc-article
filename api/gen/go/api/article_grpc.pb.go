@@ -25,6 +25,7 @@ type ArticleServiceClient interface {
 	Ping(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
 	AddOrUpdateAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*AuthorID, error)
 	DelAuthorByKey(ctx context.Context, in *Author, opts ...grpc.CallOption) (*Empty, error)
+	ListArticleMeta(ctx context.Context, in *ListArticleMetaReq, opts ...grpc.CallOption) (*ListArticleMetaRes, error)
 	PutAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*AuthorID, error)
 	DelAuthor(ctx context.Context, in *AuthorID, opts ...grpc.CallOption) (*Empty, error)
 	PutArticle(ctx context.Context, in *Article, opts ...grpc.CallOption) (*ArticleID, error)
@@ -63,6 +64,15 @@ func (c *articleServiceClient) AddOrUpdateAuthor(ctx context.Context, in *Author
 func (c *articleServiceClient) DelAuthorByKey(ctx context.Context, in *Author, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
 	err := c.cc.Invoke(ctx, "/api.ArticleService/DelAuthorByKey", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleServiceClient) ListArticleMeta(ctx context.Context, in *ListArticleMetaReq, opts ...grpc.CallOption) (*ListArticleMetaRes, error) {
+	out := new(ListArticleMetaRes)
+	err := c.cc.Invoke(ctx, "/api.ArticleService/ListArticleMeta", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -139,6 +149,7 @@ type ArticleServiceServer interface {
 	Ping(context.Context, *Empty) (*Empty, error)
 	AddOrUpdateAuthor(context.Context, *Author) (*AuthorID, error)
 	DelAuthorByKey(context.Context, *Author) (*Empty, error)
+	ListArticleMeta(context.Context, *ListArticleMetaReq) (*ListArticleMetaRes, error)
 	PutAuthor(context.Context, *Author) (*AuthorID, error)
 	DelAuthor(context.Context, *AuthorID) (*Empty, error)
 	PutArticle(context.Context, *Article) (*ArticleID, error)
@@ -161,6 +172,9 @@ func (UnimplementedArticleServiceServer) AddOrUpdateAuthor(context.Context, *Aut
 }
 func (UnimplementedArticleServiceServer) DelAuthorByKey(context.Context, *Author) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelAuthorByKey not implemented")
+}
+func (UnimplementedArticleServiceServer) ListArticleMeta(context.Context, *ListArticleMetaReq) (*ListArticleMetaRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListArticleMeta not implemented")
 }
 func (UnimplementedArticleServiceServer) PutAuthor(context.Context, *Author) (*AuthorID, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PutAuthor not implemented")
@@ -246,6 +260,24 @@ func _ArticleService_DelAuthorByKey_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ArticleServiceServer).DelAuthorByKey(ctx, req.(*Author))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleService_ListArticleMeta_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListArticleMetaReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServiceServer).ListArticleMeta(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ArticleService/ListArticleMeta",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServiceServer).ListArticleMeta(ctx, req.(*ListArticleMetaReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -394,6 +426,10 @@ var ArticleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DelAuthorByKey",
 			Handler:    _ArticleService_DelAuthorByKey_Handler,
+		},
+		{
+			MethodName: "ListArticleMeta",
+			Handler:    _ArticleService_ListArticleMeta_Handler,
 		},
 		{
 			MethodName: "PutAuthor",

@@ -38,7 +38,6 @@ func TestNewMySQLWithOptions(t *testing.T) {
 				ConnMaxLifeTime: 60 * time.Second,
 				MaxIdleConns:    10,
 				MaxOpenConns:    20,
-				LogMode:         false,
 			},
 		})
 		So(err, ShouldBeNil)
@@ -64,21 +63,20 @@ func NewTestMysql() (*MySQL, error) {
 			ConnMaxLifeTime: 60 * time.Second,
 			MaxIdleConns:    10,
 			MaxOpenConns:    20,
-			LogMode:         false,
 		},
 	})
 }
 
 func CleanTestMysql(db *MySQL) {
-	db.db.Delete(context.Background(), &storage.Author{Key: "testKey1"})
-	db.db.Delete(context.Background(), &storage.Article{AuthorID: "testAuthorID1", Title: "testTitle1"})
+	db.db.Delete(context.Background(), &storage.Author{}, &storage.Author{Key: "testKey1"})
+	db.db.Delete(context.Background(), &storage.Article{}, &storage.Article{AuthorID: "testAuthorID1", Title: "testTitle1"})
 	for i := 0; i < 10; i++ {
-		db.db.Delete(context.Background(), &storage.Article{
+		db.db.Delete(context.Background(), &storage.Article{}, &storage.Article{
 			AuthorID: fmt.Sprintf("testAuthorID%v", i),
 			Title:    fmt.Sprintf("testTitle%v", i),
 		})
 
-		db.db.Delete(context.Background(), &storage.Article{
+		db.db.Delete(context.Background(), &storage.Article{}, &storage.Article{
 			AuthorID: "testAuthorID0",
 			Title:    fmt.Sprintf("testTitle%v", i),
 		})

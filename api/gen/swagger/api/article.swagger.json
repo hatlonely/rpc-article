@@ -359,6 +359,50 @@
           "ArticleService"
         ]
       }
+    },
+    "/v1/listArticleMeta": {
+      "get": {
+        "operationId": "ArticleService_ListArticleMeta",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListArticleMetaRes"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "authorID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ArticleService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -404,6 +448,40 @@
         }
       }
     },
+    "apiArticleMeta": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "authorID": {
+          "type": "string"
+        },
+        "authorName": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "brief": {
+          "type": "string"
+        },
+        "createAt": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "updateAt": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "apiAuthor": {
       "type": "object",
       "properties": {
@@ -428,6 +506,17 @@
     },
     "apiEmpty": {
       "type": "object"
+    },
+    "apiListArticleMetaRes": {
+      "type": "object",
+      "properties": {
+        "articleMetas": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiArticleMeta"
+          }
+        }
+      }
     },
     "apiListArticleRes": {
       "type": "object",
