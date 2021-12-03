@@ -18,24 +18,37 @@ func TestMySQL_PutAuthor(t *testing.T) {
 
 		Convey("normal", func() {
 			_, err := db.PutAuthor(context.Background(), &storage.Author{
-				Key:  "testKey1",
-				Name: "testName1",
+				Key:    "testKey1",
+				Name:   "testName1",
+				Avatar: "testAvatar1",
 			})
 			So(err, ShouldBeNil)
 		})
 
 		Convey("duplicate entry", func() {
-			_, err := db.PutAuthor(context.Background(), &storage.Author{
-				Key:  "testKey1",
-				Name: "testName1",
+			id1, err := db.PutAuthor(context.Background(), &storage.Author{
+				Key:    "testKey1",
+				Name:   "testName1",
+				Avatar: "testAvatar1",
 			})
 			So(err, ShouldBeNil)
 
-			_, err = db.PutAuthor(context.Background(), &storage.Author{
-				Key:  "testKey1",
-				Name: "testName1",
+			id2, err := db.PutAuthor(context.Background(), &storage.Author{
+				Key:    "testKey1",
+				Name:   "testName2",
+				Avatar: "testAvatar2",
 			})
 			So(err, ShouldBeNil)
+			So(id1, ShouldEqual, id2)
+
+			author, err := db.GetAuthor(context.Background(), id1)
+			So(err, ShouldBeNil)
+			So(author, ShouldResemble, &storage.Author{
+				ID:     id1,
+				Key:    "testKey1",
+				Name:   "testName2",
+				Avatar: "testAvatar2",
+			})
 		})
 	})
 }
@@ -49,17 +62,19 @@ func TestMySQL_GetAuthor(t *testing.T) {
 
 		Convey("normal", func() {
 			id, err := db.PutAuthor(context.Background(), &storage.Author{
-				Key:  "testKey1",
-				Name: "testName1",
+				Key:    "testKey1",
+				Name:   "testName1",
+				Avatar: "testAvatar1",
 			})
 			So(err, ShouldBeNil)
 
 			author, err := db.GetAuthor(context.Background(), id)
 			So(err, ShouldBeNil)
 			So(author, ShouldResemble, &storage.Author{
-				ID:   id,
-				Key:  "testKey1",
-				Name: "testName1",
+				ID:     id,
+				Key:    "testKey1",
+				Name:   "testName1",
+				Avatar: "testAvatar1",
 			})
 		})
 
@@ -79,23 +94,26 @@ func TestMySQL_UpdateAuthor(t *testing.T) {
 
 		Convey("normal", func() {
 			id, err := db.PutAuthor(context.Background(), &storage.Author{
-				Key:  "testKey1",
-				Name: "testName1",
+				Key:    "testKey1",
+				Name:   "testName1",
+				Avatar: "testAvatar1",
 			})
 			So(err, ShouldBeNil)
 
 			err = db.UpdateAuthor(context.Background(), &storage.Author{
-				ID:   id,
-				Name: "testName2",
+				ID:     id,
+				Name:   "testName2",
+				Avatar: "testAvatar2",
 			})
 			So(err, ShouldBeNil)
 
 			author, err := db.GetAuthor(context.Background(), id)
 			So(err, ShouldBeNil)
 			So(author, ShouldResemble, &storage.Author{
-				ID:   id,
-				Key:  "testKey1",
-				Name: "testName2",
+				ID:     id,
+				Key:    "testKey1",
+				Name:   "testName2",
+				Avatar: "testAvatar2",
 			})
 		})
 	})
@@ -110,8 +128,9 @@ func TestMySQL_DelAuthor(t *testing.T) {
 
 		Convey("normal", func() {
 			id, err := db.PutAuthor(context.Background(), &storage.Author{
-				Key:  "testKey1",
-				Name: "testName1",
+				Key:    "testKey1",
+				Name:   "testName1",
+				Avatar: "testAvatar1",
 			})
 			So(err, ShouldBeNil)
 
@@ -133,17 +152,19 @@ func TestMySQL_GetAuthorByKey(t *testing.T) {
 
 		Convey("normal", func() {
 			id, err := db.PutAuthor(context.Background(), &storage.Author{
-				Key:  "testKey1",
-				Name: "testName1",
+				Key:    "testKey1",
+				Name:   "testName1",
+				Avatar: "testAvatar1",
 			})
 			So(err, ShouldBeNil)
 
 			author, err := db.GetAuthorByKey(context.Background(), "testKey1")
 			So(err, ShouldBeNil)
 			So(author, ShouldResemble, &storage.Author{
-				ID:   id,
-				Key:  "testKey1",
-				Name: "testName1",
+				ID:     id,
+				Key:    "testKey1",
+				Name:   "testName1",
+				Avatar: "testAvatar1",
 			})
 		})
 
@@ -163,23 +184,26 @@ func TestMySQL_UpdateAuthorByKey(t *testing.T) {
 
 		Convey("normal", func() {
 			id, err := db.PutAuthor(context.Background(), &storage.Author{
-				Key:  "testKey1",
-				Name: "testName1",
+				Key:    "testKey1",
+				Name:   "testName1",
+				Avatar: "testAvatar1",
 			})
 			So(err, ShouldBeNil)
 
 			err = db.UpdateAuthorByKey(context.Background(), &storage.Author{
-				Key:  "testKey1",
-				Name: "testName2",
+				Key:    "testKey1",
+				Name:   "testName2",
+				Avatar: "testAvatar2",
 			})
 			So(err, ShouldBeNil)
 
 			author, err := db.GetAuthor(context.Background(), id)
 			So(err, ShouldBeNil)
 			So(author, ShouldResemble, &storage.Author{
-				ID:   id,
-				Key:  "testKey1",
-				Name: "testName2",
+				ID:     id,
+				Key:    "testKey1",
+				Name:   "testName2",
+				Avatar: "testAvatar2",
 			})
 		})
 	})
@@ -194,8 +218,9 @@ func TestMySQL_DelAuthorByKey(t *testing.T) {
 
 		Convey("normal", func() {
 			id, err := db.PutAuthor(context.Background(), &storage.Author{
-				Key:  "testKey1",
-				Name: "testName1",
+				Key:    "testKey1",
+				Name:   "testName1",
+				Avatar: "testAvatar1",
 			})
 			So(err, ShouldBeNil)
 

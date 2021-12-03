@@ -5,16 +5,31 @@ import (
 	"encoding/hex"
 
 	"github.com/hatlonely/rpc-article/internal/storage"
+	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 func (m *MySQL) PutAuthor(ctx context.Context, author *storage.Author) (string, error) {
+	//author.ID = hex.EncodeToString(uuid.NewV4().Bytes())
+	//return author.ID, m.db.Clauses(ctx, clause.OnConflict{
+	//	UpdateAll: true,
+	//}).Create(ctx, author).Unwrap().Error
+
 	author.ID = hex.EncodeToString(uuid.NewV4().Bytes())
-	return author.ID, m.db.Clauses(ctx, clause.OnConflict{
+	if err := m.db.Clauses(ctx, clause.OnConflict{
 		UpdateAll: true,
-	}).Create(ctx, author).Unwrap().Error
+	}).Create(ctx, author).Unwrap().Error; err != nil {
+		return "", errors.Wrap(err, "db.Create failed")
+	}
+	var newAuthor storage.Author
+	if err := m.db.Where(ctx, &storage.Author{
+		Key: author.Key,
+	}).First(ctx, &newAuthor).Unwrap().Error; err != nil {
+		return "", errors.Wrap(err, "db.Find failed")
+	}
+	return newAuthor.ID, nil
 }
 
 func (m *MySQL) GetAuthor(ctx context.Context, id string) (*storage.Author, error) {

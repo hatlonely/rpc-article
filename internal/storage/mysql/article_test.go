@@ -29,7 +29,7 @@ func TestMySQL_PutArticle(t *testing.T) {
 		})
 
 		Convey("duplicate entry", func() {
-			_, err := db.PutArticle(context.Background(), &storage.Article{
+			id1, err := db.PutArticle(context.Background(), &storage.Article{
 				AuthorID: "testAuthorID1",
 				Title:    "testTitle1",
 				Tags:     "testTag1,testTag2",
@@ -38,14 +38,28 @@ func TestMySQL_PutArticle(t *testing.T) {
 			})
 			So(err, ShouldBeNil)
 
-			_, err = db.PutArticle(context.Background(), &storage.Article{
+			id2, err := db.PutArticle(context.Background(), &storage.Article{
 				AuthorID: "testAuthorID1",
 				Title:    "testTitle1",
-				Tags:     "testTag1,testTag2",
-				Brief:    "testBrief1",
-				Content:  "testContent1",
+				Tags:     "testTag3,testTag4",
+				Brief:    "testBrief2",
+				Content:  "testContent2",
 			})
 			So(err, ShouldBeNil)
+			So(id1, ShouldEqual, id2)
+
+			article, err := db.GetArticle(context.Background(), id1)
+			So(err, ShouldBeNil)
+			So(article, ShouldResemble, &storage.Article{
+				ID:       id1,
+				AuthorID: "testAuthorID1",
+				Title:    "testTitle1",
+				Tags:     "testTag3,testTag4",
+				Brief:    "testBrief2",
+				Content:  "testContent2",
+				CreateAt: article.CreateAt,
+				UpdateAt: article.UpdateAt,
+			})
 		})
 	})
 }

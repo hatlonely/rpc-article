@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/hex"
 
+	"github.com/pkg/errors"
+
 	"github.com/hatlonely/rpc-article/internal/storage"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
@@ -12,9 +14,19 @@ import (
 
 func (m *MySQL) PutArticle(ctx context.Context, article *storage.Article) (string, error) {
 	article.ID = hex.EncodeToString(uuid.NewV4().Bytes())
-	return article.ID, m.db.Clauses(ctx, clause.OnConflict{
+	if err := m.db.Clauses(ctx, clause.OnConflict{
 		UpdateAll: true,
-	}).Create(ctx, article).Unwrap().Error
+	}).Create(ctx, article).Unwrap().Error; err != nil {
+		return "", errors.Wrap(err, "db.Create failed")
+	}
+	var newArticle storage.Article
+	if err := m.db.Where(ctx, &storage.Article{
+		AuthorID: article.AuthorID,
+		Title:    article.Title,
+	}).First(ctx, &newArticle).Unwrap().Error; err != nil {
+		return "", errors.Wrap(err, "db.Find failed")
+	}
+	return newArticle.ID, nil
 }
 
 func (m *MySQL) GetArticle(ctx context.Context, id string) (*storage.Article, error) {
