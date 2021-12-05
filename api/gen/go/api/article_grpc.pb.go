@@ -23,7 +23,6 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ArticleServiceClient interface {
 	Ping(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
-	AddOrUpdateAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*AuthorID, error)
 	DelAuthorByKey(ctx context.Context, in *Author, opts ...grpc.CallOption) (*Empty, error)
 	ListArticleMeta(ctx context.Context, in *ListArticleMetaReq, opts ...grpc.CallOption) (*ListArticleMetaRes, error)
 	PutAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*AuthorID, error)
@@ -46,15 +45,6 @@ func NewArticleServiceClient(cc grpc.ClientConnInterface) ArticleServiceClient {
 func (c *articleServiceClient) Ping(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
 	err := c.cc.Invoke(ctx, "/api.ArticleService/Ping", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *articleServiceClient) AddOrUpdateAuthor(ctx context.Context, in *Author, opts ...grpc.CallOption) (*AuthorID, error) {
-	out := new(AuthorID)
-	err := c.cc.Invoke(ctx, "/api.ArticleService/AddOrUpdateAuthor", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -147,7 +137,6 @@ func (c *articleServiceClient) ListArticle(ctx context.Context, in *ListArticleR
 // for forward compatibility
 type ArticleServiceServer interface {
 	Ping(context.Context, *Empty) (*Empty, error)
-	AddOrUpdateAuthor(context.Context, *Author) (*AuthorID, error)
 	DelAuthorByKey(context.Context, *Author) (*Empty, error)
 	ListArticleMeta(context.Context, *ListArticleMetaReq) (*ListArticleMetaRes, error)
 	PutAuthor(context.Context, *Author) (*AuthorID, error)
@@ -166,9 +155,6 @@ type UnimplementedArticleServiceServer struct {
 
 func (UnimplementedArticleServiceServer) Ping(context.Context, *Empty) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
-}
-func (UnimplementedArticleServiceServer) AddOrUpdateAuthor(context.Context, *Author) (*AuthorID, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddOrUpdateAuthor not implemented")
 }
 func (UnimplementedArticleServiceServer) DelAuthorByKey(context.Context, *Author) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelAuthorByKey not implemented")
@@ -224,24 +210,6 @@ func _ArticleService_Ping_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ArticleServiceServer).Ping(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ArticleService_AddOrUpdateAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Author)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ArticleServiceServer).AddOrUpdateAuthor(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.ArticleService/AddOrUpdateAuthor",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArticleServiceServer).AddOrUpdateAuthor(ctx, req.(*Author))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -418,10 +386,6 @@ var ArticleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Ping",
 			Handler:    _ArticleService_Ping_Handler,
-		},
-		{
-			MethodName: "AddOrUpdateAuthor",
-			Handler:    _ArticleService_AddOrUpdateAuthor_Handler,
 		},
 		{
 			MethodName: "DelAuthorByKey",

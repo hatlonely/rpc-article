@@ -38,38 +38,6 @@
         ]
       }
     },
-    "/v1/addOrUpdateAuthor": {
-      "post": {
-        "operationId": "ArticleService_AddOrUpdateAuthor",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiAuthorID"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/apiAuthor"
-            }
-          }
-        ],
-        "tags": [
-          "ArticleService"
-        ]
-      }
-    },
     "/v1/article": {
       "post": {
         "operationId": "ArticleService_PutArticle",
