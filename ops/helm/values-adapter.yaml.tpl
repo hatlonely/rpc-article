@@ -40,8 +40,8 @@ config:
         "marshalEmitUnpopulated": false,
         "unmarshalDiscardUnknown": true,
         "enableTrace": false,
-        "enableMetric": false,
-        "enablePprof": false,
+        "enableMetric": true,
+        "enablePprof": true,
         "enablePing": true,
         "jaeger": {
           "serviceName": "rpc-ops",
