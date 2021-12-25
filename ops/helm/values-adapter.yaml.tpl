@@ -111,7 +111,7 @@ config:
           }, {
             "type": "ElasticSearch",
             "options": {
-              "index": "ops-grpc",
+              "index": "grpc",
               "idField": "requestID",
               "timeout": "200ms",
               "msgChanLen": 200,
@@ -149,7 +149,7 @@ config:
           }, {
             "type": "ElasticSearch",
             "options": {
-              "index": "ops-log",
+              "index": "info",
               "idField": "requestID",
               "timeout": "200ms",
               "msgChanLen": 200,
