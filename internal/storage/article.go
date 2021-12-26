@@ -13,15 +13,15 @@ var ErrNotFound = errors.New("not found")
 
 type Author struct {
 	ID     string `gorm:"type:char(32);primary_key" json:"id"`
-	Key    string `gorm:"type:char(32);unique_index:key_index" json:"key,omitempty"`
+	Key    string `gorm:"type:char(32);index:key_index,unique" json:"key,omitempty"`
 	Name   string `gorm:"type:char(32);not null" json:"name,omitempty"`
 	Avatar string `gorm:"type:varchar(255)" json:"avatar,omitempty"`
 }
 
 type Article struct {
 	ID       string    `gorm:"type:char(32);primary_key" json:"id"`
-	AuthorID string    `gorm:"type:char(32);column:authorID;unique_index:author_title_idx;default:0" json:"authorID,omitempty"`
-	Title    string    `gorm:"type:varchar(128);unique_index:author_title_idx;not null" json:"title,omitempty"`
+	AuthorID string    `gorm:"type:char(32);column:authorID;index:author_title_idx,unique;default:0" json:"authorID,omitempty"`
+	Title    string    `gorm:"type:varchar(128);index:author_title_idx,unique;not null" json:"title,omitempty"`
 	Tags     string    `gorm:"type:varchar(256);default:''" json:"tags,omitempty"`
 	Brief    string    `gorm:"type:varchar(256);default:''" json:"brief,omitempty"`
 	Content  string    `gorm:"type:longtext COLLATE utf8mb4_unicode_520_ci;not null" json:"content,omitempty"`
