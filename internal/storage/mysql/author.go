@@ -12,11 +12,6 @@ import (
 )
 
 func (m *MySQL) PutAuthor(ctx context.Context, author *storage.Author) (string, error) {
-	//author.ID = hex.EncodeToString(uuid.NewV4().Bytes())
-	//return author.ID, m.db.Clauses(ctx, clause.OnConflict{
-	//	UpdateAll: true,
-	//}).Create(ctx, author).Unwrap().Error
-
 	author.ID = hex.EncodeToString(uuid.NewV4().Bytes())
 	if err := m.db.Clauses(ctx, clause.OnConflict{
 		UpdateAll: true,
